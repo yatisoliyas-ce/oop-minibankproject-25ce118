@@ -1,0 +1,7 @@
+import java.util.*;import java.util.concurrent.*;
+public class MiniBank {
+    static class Account implements Comparable<Account>{final String accountNumber,owner;long balance;Account(String n,String o,long b){accountNumber=n;owner=o;balance=b;}public int compareTo(Account a){return accountNumber.compareTo(a.accountNumber);}public String toString(){return accountNumber+" "+owner+" balance="+balance;}}
+    static class AccountStore {private final HashMap<String,Account> accounts=new HashMap<>();private final ArrayList<String> history=new ArrayList<>();void add(Account a){accounts.put(a.accountNumber,a);}Account get(String n){return accounts.get(n);}ArrayList<Account> getAll(){return new ArrayList<>(accounts.values());}void addHistory(String s){history.add(s);}ArrayList<String> getHistory(){return new ArrayList<>(history);}ArrayList<Account> sortedByBalance(){ArrayList<Account> a=getAll();a.sort(Comparator.comparingLong((Account x)->x.balance).reversed());return a;}}
+    static class TransactionProcessor {final ConcurrentHashMap<String,Account> accounts=new ConcurrentHashMap<>();}
+    public static void main(String[] args){AccountStore s=new AccountStore();s.add(new Account("AC0001","Aarav",5000));s.add(new Account("AC0002","Diya",2000));s.add(new Account("AC0003","Kabir",9000));s.addHistory("DEPOSIT AC0001 500");System.out.println("Lookup: "+s.get("AC0002"));System.out.println("Sorted by balance:");for(Account a:s.sortedByBalance())System.out.println(a);}
+}

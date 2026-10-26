@@ -1,0 +1,3 @@
+package util;
+import java.lang.reflect.*;import java.util.*;import model.annotation.Positive;
+public class AnnotationValidator {public String[] validate(Object object){List<String> errors=new ArrayList<>();for(Class<?> c=object.getClass();c!=null;c=c.getSuperclass())for(Field f:c.getDeclaredFields())try{if(f.isAnnotationPresent(Positive.class)){f.setAccessible(true);Object v=f.get(object);if(v instanceof Number n&&n.longValue()<=0)errors.add(f.getName()+": "+f.getAnnotation(Positive.class).message());}}catch(IllegalAccessException e){errors.add("Cannot validate "+f.getName());}return errors.toArray(String[]::new);}}
